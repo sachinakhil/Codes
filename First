@@ -1,0 +1,25 @@
+def first(s,productions):
+    first=set()
+    for i in range(len(productions[s])):
+        for j in range(len(productions[s][i])):
+            c=productions[s][i][j]
+
+            if(c.isupper()): # if c is a Non-Terminal
+                f=first(c,productions) 
+                if('eps' not in f): # if A->BC then First(A)=First(B) if eps not in First of B
+                    for k in f:
+                        first.add(k)
+                    break
+                else: # if eps in First of B then First(A)=First(B) union First(C)
+                    if (j==len(productions[s][i]-1)):
+                        for k in f:
+                            first.add(k)
+                    else:
+                        f.remove('eps')
+                        for k in f:
+                            first.add(k)
+            
+            else: #if A->a alpha First(A)={a}
+                first.add(c)
+                break
+    return first
